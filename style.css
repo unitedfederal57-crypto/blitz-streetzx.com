@@ -231,6 +231,14 @@ body.bg-touhou {
     --bg-image: url('background.jpg');
 }
 
+body.bg-sportscar-gacha {
+    --bg-image: url('background3.jpg');
+}
+
+body.bg-touhou-gacha {
+    --bg-image: url('background3.jpg');
+}
+
 /* ==========================================================================
    5. SPLASH SCREEN / INTRO LOADING
    ========================================================================== */
@@ -1347,12 +1355,4 @@ body.page-fade-out {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-}
-
-body.bg-sports-car {
-    --bg-image: url('background3.jpg');
-}
-
-body.bg-touhou {
-    --bg-image: url('background3.jpg');
 }
