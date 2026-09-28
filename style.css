@@ -223,20 +223,17 @@ a, button, input, select, textarea, .th-card, .card-box-home, .thumbnail-card, .
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%2300ffff;' /><stop offset='100%' style='stop-color:%23ff0055;' /></linearGradient></defs><path d='M2,2 L26,14 L16,18 L24,28 L20,30 L12,20 L4,26 Z' fill='url(%23grad)' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='round'/></svg>") 2 2, pointer !important;
 }
 
-body.bg-sports-car {
-    --bg-image: url('background.jpg');
-}
-
 body.bg-touhou {
-    --bg-image: url('background.jpg');
+  --bg-image: url('background1.jpg');
 }
 
-body.bg-sportscar-gacha {
-    --bg-image: url('background3.jpg');
+body.bg-sports-car {
+  --bg-image: url('background2.jpg');
 }
 
+body.bg-sportscar-gacha,
 body.bg-touhou-gacha {
-    --bg-image: url('background3.jpg');
+  --bg-image: url('background3.jpg');
 }
 
 /* ==========================================================================
