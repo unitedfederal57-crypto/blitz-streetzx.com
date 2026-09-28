@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-version" content="V5.0.0">
+    <meta name="description" content="BLITZ-STREETZX.COM.">
+    <meta property="og:title" content="BLITZ-STREETZX.COM">
+    <meta property="og:description" content="BLITZ-STREETZX">
+    <meta property="og:image" content="logo.png">
+    
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- KODE LOGO TAB BROWSER (FAVICON) -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- FONTS & STYLESHEET V5.0.0 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-home">
+
+    <!-- SPLASH SCREEN / INTRO LOADING (v5.0.0 UPGRADED) -->
+    <div id="splash-screen" role="status" aria-live="polite">
+        <div class="splash-content">
+            <img src="logo.png" alt="Loading Logo" class="splash-logo">
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+<nav class="countainer-navbar"> 
+    <ul class="ul-navbar">
+        <!-- Hanya HOME yang punya class="active" di index.html -->
+        <li class="li-navbar"><a href="index.html" class="a-navbar active" onclick="playClick()">HOME</a></li>
+        <li class="li-navbar"><a href="about.html" class="a-navbar" onclick="playClick()">ABOUT ME</a></li>
+        <li class="li-navbar"><a href="sportscar.html" class="a-navbar" onclick="playClick()">FAVORITE SPORTS CAR</a></li>
+        <li class="li-navbar"><a href="touhou.html" class="a-navbar" onclick="playClick()">FAVORITE TOUHOU CHARACTER</a></li>
+        <li class="li-navbar"><a href="location.html" class="a-navbar" onclick="playClick()">FAVORITE LOCATION</a></li>
+        <li class="li-navbar"><a href="contact.html" class="a-navbar" onclick="playClick()">CONTACT ME</a></li>
+    </ul>
+
+    <div class="logo-container">
+        <a href="index.html" onclick="playClick()">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+        </a>
+    </div>
+</nav>
+
+    <!-- SFX Suara Klik -->
+    <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+    <!-- Audio Musik BGM -->
+    <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+    <!-- BGM CONTROLLER BUTTON (v5.0.0 ENHANCED) -->
+    <div class="bgm-wrapper">
+        <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+            🎵 BGM: OFF
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="countainer-content">
+        
+        <!-- HORIZONTAL CARDS / QUICK NAV -->
+        <section class="home-box-container" aria-label="Featured Showcase">
+            
+            <a href="sportscar.html" class="card-box-home" onclick="playClickSFX(event)">
+                <div class="card-image-wrapper">
+                    <img src="thumbnail1.jpg" alt="Sports Car Showcase" loading="lazy">
+                    <span class="card-label">SPORTS CARS</span>
+                </div>
+            </a>
+
+            <a href="touhou_gacha.html" class="card-box-home" onclick="playClickSFX(event)">
+                <div class="card-image-wrapper">
+                    <img src="Gacha1.jpg" alt="gacha Characters" loading="lazy">
+                    <span class="card-label">Mini Games</span>
+                </div>
+            </a>
+
+            <a href="about.html" class="card-box-home" onclick="playClickSFX(event)">
+                <div class="card-image-wrapper">
+                    <img src="thumbnail3.jpg" alt="About Creator" loading="lazy">
+                    <span class="card-label">CREATOR PROFILE</span>
+                </div>
+            </a>
+
+        </section>
+
+        <!-- GARIS PEMISAH NEON -->
+        <hr class="section-divider">
+
+        <!-- SIDEBAR THUMBNAIL GRID -->
+        <section class="thumbnail-grid" aria-label="External Community Links">
+            
+            <!-- NFS MODS -->
+            <a href="https://nfsmods.xyz/" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="1.png" alt="NFS Mods" loading="lazy" />
+                <span class="thumbnail-title">NFS Mods</span>
+            </a>
+
+            <!-- TOUHOU WIKI -->
+            <a href="https://en.touhouwiki.net/" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img2.jpg" alt="Touhou Wiki" loading="lazy" />
+                <span class="thumbnail-title">Touhou Wiki</span>
+            </a>
+
+            <!-- DISCORD SERVER -->
+            <a href="https://discord.gg/rRpnfCYsTR" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img3.jpeg" alt="Discord Server" loading="lazy" />
+                <span class="thumbnail-title">Discord Server</span>
+            </a>
+
+            <!-- YOUTUBE CHANNEL -->
+            <a href="https://youtu.be/sf_heDWLli8?si=6Bx40RW_EtFodHmh" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img4.webp" alt="YouTube" loading="lazy" />
+                <span class="thumbnail-title">No Confusion</span>
+            </a>
+
+            <!-- YOUTUBE CHANNEL -->
+            <a href="https://youtu.be/iSY4zIPZqSI?si=1wXsBHllEP2g_9Cs" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img7.jpg" alt="YouTube" loading="lazy" />
+                <span class="thumbnail-title">Piano Eurobeat</span>
+            </a>
+
+
+            <!-- FACEBOOK GROUP -->
+            <a href="https://www.facebook.com/groups/333876834729378" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img5.jpg" alt="Facebook" loading="lazy" />
+                <span class="thumbnail-title">Facebook Group</span>
+            </a>
+
+            <!-- MFG -->
+            <a href="https://mfg-anime.com/" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="img6.jpg" alt="MFG" loading="lazy" />
+                <span class="thumbnail-title">MFG Anime</span>
+            </a>
+
+            <!-- Hisooutensoku download -->
+            <a href="https://mega.nz/file/V45mkApZ#ru2wAnLAwTK95HLvrQQ32VSubdO1MsSENSIV2fq-NEo" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="thumbnail2.jpg" alt="MFG" loading="lazy" />
+                <span class="thumbnail-title">Hisoutensoku Download</span>
+            </a>
+
+             <!-- Need For Speed -->
+            <a href="https://needforspeed.retrodrive.workers.dev/" target="_blank" rel="noopener noreferrer" class="thumbnail-card" onclick="playClickSFX(event)">
+                <img src="images.jpeg" alt="MFG" loading="lazy" />
+                <span class="thumbnail-title">NFS Download</span>
+            </a>
+
+        </section>
+    </main>
+    <!-- MAIN CONTENT END -->
+
+    <!-- FOOTER / COPYRIGHT (v5.0.0 UPGRADED) -->
+    <footer class="copyright-container">
+        <div class="copyright-content">
+            <p class="copyright-text">Copyright © 202X Blitz-StreetZX.com. All Rights Reserved.</p>
+            <p class="copyright-text">This is a personal website.</p>
+        </div>
+
+        <!-- CONTROL BRIGHTNESS SLIDER DI DALAM FOOTER -->
+        <div class="brightness-control">
+            <label for="brightness" class="brightness-label">brightness:</label>
+            <input type="range" id="brightness" min="10" max="100" value="50" aria-label="Adjust Background Brightness">
+        </div>
+    </footer>
+    <!-- FOOTER END -->
+
+    <!-- SCRIPT JAVASCRIPT INLINE & EXTERNAL (v5.0.0 ULTIMATE ENGINE) -->
+    <script>
+        // Splash Screen Loader Handler
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 400);
+            }
+        });
+
+        // Brightness Controller Handler
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                document.documentElement.style.setProperty('--bg-brightness', e.target.value + '%');
+            });
+        }
+
+        // SFX Klik Navigasi Biasa
+        function playClick() {
+            const sfx = document.getElementById('sfx-click');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        // SFX Trigger dengan Ripple Effect Animation Engine (v5.0.0)
+        function playClickSFX(e) {
+            playClick();
+
+            if (e && e.currentTarget) {
+                const target = e.currentTarget;
+                const rect = target.getBoundingClientRect();
+                const circle = document.createElement('span');
+                const diameter = Math.max(rect.width, rect.height);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${(e.clientX || (rect.left + rect.width / 2)) - rect.left - radius}px`;
+                circle.style.top = `${(e.clientY || (rect.top + rect.height / 2)) - rect.top - radius}px`;
+                circle.classList.add('ripple');
+
+                const existingRipple = target.querySelector('.ripple');
+                if (existingRipple) {
+                    existingRipple.remove();
+                }
+
+                target.appendChild(circle);
+            }
+        }
+
+        // BGM Toggle Controller (v5.0.0 Autoplay Support)
+        function toggleBGM(e) {
+            const bgm = document.getElementById('bgm-audio');
+            const btn = document.getElementById('bgm-btn');
+            
+            if (!bgm || !btn) return;
+
+            if (bgm.paused) {
+                bgm.volume = 0.5;
+                bgm.play().then(() => {
+                    btn.innerText = '🎵 BGM: ON';
+                    btn.classList.add('playing');
+                    btn.classList.remove('muted');
+                }).catch(err => console.error('BGM Autoplay blocked:', err));
+            } else {
+                bgm.pause();
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('playing');
+                btn.classList.add('muted');
+            }
+        }
+    </script>
+    <script src="script.js" defer></script>
+    
+</body>
+</html>

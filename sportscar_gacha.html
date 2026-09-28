@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BLITZ-STREETZX - Sports Car Garage & Gacha Center v6.0.0 Engine">
+    <meta name="theme-version" content="6.0.0">
+    <meta name="theme-color" content="#00ffff">
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- STYLESHEET MAIN & CUSTOM GARAGE GACHA STYLES -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        :root {
+            --car-card-bg: rgba(8, 14, 22, 0.90);
+            --car-border: rgba(0, 255, 255, 0.25);
+            --car-glow: rgba(0, 255, 255, 0.4);
+            --car-gold: #ffd700;
+        }
+
+        /* BANNER & GACHA SECTION */
+        .gacha-hero-banner {
+            width: calc(100% - 80px);
+            margin: 20px 40px;
+            padding: 30px 25px;
+            background: linear-gradient(135deg, rgba(0, 40, 60, 0.85), rgba(10, 18, 25, 0.95));
+            border: 2px solid var(--accent-color, #00ffff);
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        .gacha-banner-info {
+            max-width: 650px;
+        }
+
+        .gacha-banner-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .gacha-banner-desc {
+            font-size: 13.5px;
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .gacha-bonus-note {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px dashed #ffd700;
+            color: #ffd700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .gacha-action-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .user-coins-badge {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00ffff;
+            letter-spacing: 1px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .btn-gacha-pull {
+            background: linear-gradient(45deg, #00b4db, #00ffff);
+            color: #000000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .btn-gacha-pull:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+            background: linear-gradient(45deg, #00ffff, #ffffff);
+        }
+
+        .btn-gacha-pull:disabled {
+            background: #4a5568;
+            color: #a0aec0;
+            cursor: not-allowed;
+            box-shadow: none;
+            border: 1px solid #718096;
+        }
+
+        /* GRID CAR STYLES */
+        .car-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            padding: 20px 40px;
+            box-sizing: border-box;
+        }
+
+        .car-card {
+            background: var(--car-card-bg);
+            border: 1px solid var(--car-border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .car-card.unlocked {
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .car-card.unlocked:hover {
+            transform: translateY(-8px);
+            border-color: #00ffff;
+            box-shadow: 0 12px 28px rgba(0, 255, 255, 0.35);
+        }
+
+        /* LOCKED STATE */
+        .car-card.locked {
+            filter: grayscale(85%);
+            opacity: 0.75;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .car-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .car-lock-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 10, 15, 0.75);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #a0aec0;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
+            backdrop-filter: blur(2px);
+        }
+
+        .car-lock-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .car-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+            background-color: #050b10;
+        }
+
+        .car-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+        .car-card.unlocked:hover .car-image-wrapper img {
+            transform: scale(1.08);
+            filter: brightness(1.08);
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 35, 45, 0.85);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+            z-index: 2;
+        }
+
+        .car-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .car-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .car-description {
+            font-size: 12px;
+            color: #a0aec0;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .car-footer-btn {
+            display: inline-block;
+            text-align: center;
+            background-color: rgba(0, 255, 255, 0.08);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.35);
+            padding: 9px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .car-footer-btn:hover {
+            background-color: #00ffff;
+            color: #000000;
+            box-shadow: 0 0 14px rgba(0, 255, 255, 0.7);
+            border-color: #00ffff;
+        }
+
+        /* GACHA MODAL POPUP */
+        .gacha-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .gacha-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .gacha-modal-card {
+            background: linear-gradient(145deg, #0a121a, #050b10);
+            border: 2px solid #00ffff;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 480px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gacha-modal-overlay.active .gacha-modal-card {
+            transform: scale(1);
+        }
+
+        .gacha-modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #00ffff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .gacha-result-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .gacha-result-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .gacha-result-bonus {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .btn-close-modal {
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+        .brightness-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brightness-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a0aec0;
+        }
+
+        @media (max-width: 768px) {
+            .gacha-hero-banner {
+                margin: 15px 16px;
+                width: calc(100% - 32px);
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .gacha-action-box {
+                width: 100%;
+                align-items: stretch;
+            }
+            .car-grid-container {
+                padding: 15px 16px;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-sports-car">
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" role="status" aria-live="polite">
+        <div class="splash-content">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="splash-logo" />
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="countainer">
+
+        <!-- NAVBAR -->
+        <nav class="countainer-navbar"> 
+            <ul class="ul-navbar">
+                <li class="li-navbar"><a href="index.html" class="a-navbar" onclick="playClick()">BACK TO MENU</a></li>
+                <li class="li-navbar"><a href="touhou_gacha.html" class="a-navbar" onclick="playClick()">TOUHOU GACHA ALBUM</a></li>
+            </ul>
+
+            <div class="logo-container">
+                <a href="index.html" onclick="playClick()">
+                    <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+                </a>
+            </div>
+        </nav>
+
+        <!-- SFX & AUDIO -->
+        <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+        <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+        <!-- BGM CONTROLLER BUTTON -->
+        <div class="bgm-wrapper">
+            <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+                🎵 BGM: OFF
+            </button>
+        </div>
+
+        <!-- HERO BANNER GACHA SPORTS CAR -->
+        <section class="gacha-hero-banner">
+            <div class="gacha-banner-info">
+                <h1 class="gacha-banner-title">🏎️ SPORTS CAR SINGLE GACHA MACHINE</h1>
+                <p class="gacha-banner-desc">
+                    Perform a "1x Single Gacha Pull" for "1000 Credits". Every car you acquire unlocks a garage slot and grants a free "BONUS TOUHOU CARD"!
+                </p>
+                <div class="gacha-bonus-note">
+                    🎁 FULL BONUS: Obtain specific cars to instantly claim one of the Touhou Character cards!
+                </div>
+            </div>
+            <div class="gacha-action-box">
+                <div class="user-coins-badge">
+                    🪙 CREDITS: <span id="carCoinsDisplay">1000</span>
+                </div>
+                <button id="btnPullCar1x" class="btn-gacha-pull" onclick="pullCarGacha()">
+                    🎲 PULL 1X CAR (2000 C)
+                </button>
+            </div>
+        </section>
+
+        <!-- MAIN CONTENT CAR GARAGE GRID (30 SLOTS TOTAL) -->
+        <main class="car-grid-container" id="carGridContainer">
+
+            <!-- SLOT 01 -->
+            <div class="car-card" data-car-id="car01" data-name="TOYOTA 86 GT 14R60 TURBO" data-img="c1.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#01</span>
+                    <img src="c1.jpg" alt="TOYOTA 86 GT 14R60 TURBO" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA 86 GT 14R60 TURBO</h2>
+                    <p class="car-description">Equipped with 4U-GSE FA20D Turbocharged engine producing 320hp. Mated to a 6-speed manual transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kanata_Rivington%27s_Toyota_86" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 02 -->
+            <div class="car-card" data-car-id="car02" data-name="NISSAN GTR35 NISMO 2020" data-img="c2.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#02</span>
+                    <img src="c2.jpg" alt="NISSAN GTR35 NISMO 2020" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">NISSAN GTR35 NISMO 2020</h2>
+                    <p class="car-description">VR38DETT twin-turbocharged engine producing 600hp stock. 6-speed dual-clutch transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Shun_Aiba%27s_Nissan_GT-R_Nismo_(2020)" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 03 -->
+            <div class="car-card" data-car-id="car03" data-name="PORSCHE CAYMAN 718 GT4" data-img="c3.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#03</span>
+                    <img src="c3.jpg" alt="PORSCHE CAYMAN 718 GT4" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CAYMAN 718 GT4</h2>
+                    <p class="car-description">MDG naturally-aspirated engine producing 420hp. Mated to a 6-speed manual transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Michael_Beckenbauer%27s_Porsche_718_Cayman_GT4" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 04 -->
+            <div class="car-card" data-car-id="car04" data-name="ALPINE A110R" data-img="c4.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#04</span>
+                    <img src="c4.jpg" alt="ALPINE A110R" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ALPINE A110R</h2>
+                    <p class="car-description">Renault TCe M5Pt turbocharged engine producing 304hp. 7-speed 7DCT300 dual-clutch transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kouki_Sawatari%27s_Alpine_A110R" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 05 -->
+            <div class="car-card" data-car-id="car05" data-name="TOYOTA GR SUPRA RZ BLITZ" data-img="c5.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#05</span>
+                    <img src="c5.jpg" alt="TOYOTA GR SUPRA RZ BLITZ" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA GR SUPRA RZ BLITZ</h2>
+                    <p class="car-description">B58 turbocharged engine producing 400hp with BLITZ tuneup. 8-speed ZF automatic transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Sena_Moroboshi%27s_Toyota_GR_Supra_RZ" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 06 -->
+            <div class="car-card" data-car-id="car06" data-name="ASTON MARTIN VANTAGE V8 AM6" data-img="c6.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#06</span>
+                    <img src="c6.jpg" alt="ASTON MARTIN VANTAGE V8 AM6" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ASTON MARTIN VANTAGE V8 AM6</h2>
+                    <p class="car-description">Mercedes-AMG M177 twin-turbocharged engine producing 510hp stock. 8-speed ZF transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Emma_Greene%27s_Aston_Martin_V8_Vantage" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 07 -->
+            <div class="car-card" data-car-id="car07" data-name="PORSCHE CARRERA GT3 991.1" data-img="c7.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#07</span>
+                    <img src="c7.jpg" alt="PORSCHE CARRERA GT3 991.1" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CARRERA GT3 991.1</h2>
+                    <p class="car-description">MA1.75 naturally-aspirated engine producing 500hp with tuneup. Mated to a 7-speed PDK.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Fujin_Ishigami%27s_Porsche_911_GT3" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 08 -->
+            <div class="car-card" data-car-id="car08" data-name="FERRARI 488 GTB" data-img="c8.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#08</span>
+                    <img src="c8.jpg" alt="FERRARI 488 GTB" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">FERRARI 488 GTB</h2>
+                    <p class="car-description">F154 twin-turbocharged engine producing 700hp with tuneup. 7-speed dual-clutch transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kaito_Akaba%27s_Ferrari_488_GTB" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 09 -->
+            <div class="car-card" data-car-id="car09" data-name="LAMBORGHINI HURACAN LP610-4" data-img="c9.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#09</span>
+                    <img src="c9.jpg" alt="LAMBORGHINI HURACAN LP610-4" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LAMBORGHINI HURACAN LP610-4</h2>
+                    <p class="car-description">Lamborghini Odd-Firing V10 naturally-aspirated engine producing 610hp. 7-speed dual-clutch.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Daigo_Oishi%27s_Lamborghini_Hurac%C3%A1n" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 10 -->
+            <div class="car-card" data-car-id="car10" data-name="AUDI R8 V10 PERFORMANCE QUATTRO" data-img="c10.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#10</span>
+                    <img src="c10.jpg" alt="AUDI R8 V10 PERFORMANCE QUATTRO" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">AUDI R8 V10 PERFORMANCE</h2>
+                    <p class="car-description">Lamborghini Odd-Firing V10 naturally-aspirated engine producing 620hp stock. 7-speed S-Tronic.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Yudai_Sakamoto%27s_Audi_R8_V10_Performance_Quattro" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 11 -->
+            <div class="car-card" data-car-id="car11" data-name="BMW M4 DTM CHAMPION EDITION" data-img="c11.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#11</span>
+                    <img src="c11.jpg" alt="BMW M4 DTM CHAMPION EDITION" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">BMW M4 DTM CHAMPION</h2>
+                    <p class="car-description">S55 twin-turbocharged engine producing 500hp stock. Mated to a 7-speed dual-clutch transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Takuya_Yanagida%27s_BMW_M4_DTM_Champion_Edition" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 12 -->
+            <div class="car-card" data-car-id="car12" data-name="MERCEDES BENZ AMG GTR PRE-FACELIFT" data-img="c12.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#12</span>
+                    <img src="c12.jpg" alt="MERCEDES BENZ AMG GTR PRE-FACELIFT" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">MERCEDES BENZ AMG GTR</h2>
+                    <p class="car-description">M178 twin-turbocharged engine producing 585hp stock. 7-speed AMG SPEEDSHIFT DCT.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Yosuke_Ohtani%27s_Mercedes_AMG_GT_R" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 13 -->
+            <div class="car-card" data-car-id="car13" data-name="PORSCHE CARRERA GTS 991.2" data-img="c13.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#13</span>
+                    <img src="c13.jpg" alt="PORSCHE CARRERA GTS 991.2" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CARRERA GTS 991.2</h2>
+                    <p class="car-description">MDC/JA turbocharged engine producing 450hp stock. 7-speed PDK transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Jackson_Taylor%27s_Porsche_911_Carrera_GTS" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 14 -->
+            <div class="car-card" data-car-id="car14" data-name="LEXUS LC500" data-img="c14.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#14</span>
+                    <img src="c14.jpg" alt="LEXUS LC500" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LEXUS LC500</h2>
+                    <p class="car-description">2UR-GSE naturally-aspirated V8 engine producing 477hp. 10-speed Direct Shift automatic.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Emile_H%C3%A4nninen%27s_Lexus_LC500" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 15 -->
+            <div class="car-card" data-car-id="car15" data-name="HONDA NSX NC1 CONCEPT" data-img="c15.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#15</span>
+                    <img src="c15.jpg" alt="HONDA NSX NC1 CONCEPT" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">HONDA NSX NC1 CONCEPT</h2>
+                    <p class="car-description">JNC1 twin-turbocharged engine producing 507hp (582hp with Hybrid system)\. 9-speed DCT.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kazuhiro_Maezono%27s_Honda_NSX" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 16 -->
+            <div class="car-card" data-car-id="car16" data-name="LOTUS EMIRA FIRST EDITION" data-img="c16.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#16</span>
+                    <img src="c16.jpg" alt="LOTUS EMIRA FIRST EDITION" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LOTUS EMIRA FIRST EDITION</h2>
+                    <p class="car-description">Toyota 2GR-FE supercharged engine producing 406hp. Mated to a 6-speed manual transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kakeru_Yashio%27s_Lotus_Emira" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 17 -->
+            <div class="car-card" data-car-id="car17" data-name="ALFA ROMEO 4C TYPE-960" data-img="c17.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#17</span>
+                    <img src="c17.jpg" alt="ALFA ROMEO 4C TYPE-960" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ALFA ROMEO 4C TYPE-960</h2>
+                    <p class="car-description">1750 TBi turbocharged engine producing 240hp stock. 6-speed Dual Dry Clutch transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Nozomi_Kitahara%27s_Alfa_Romeo_4C" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 18 -->
+            <div class="car-card" data-car-id="car18" data-name="TOYOTA GR-86 RZ BLITZ" data-img="c18.jpg">
+                <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#18</span>
+                    <img src="c18.jpg" alt="TOYOTA GR-86 RZ BLITZ" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA GR-86 RZ BLITZ</h2>
+                    <p class="car-description">FA24D naturally-aspirated engine tuned by BLITZ producing 235hp+. 6-speed manual transmission.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Mai_Sakurano%27s_Toyota_GR86" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOTS 19 TO 30 ARE RENDERED DYNAMICALLY VIA JAVASCRIPT ENGINE -->
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="copyright-container">
+            <div class="copyright-content">
+                <p class="copyright-text">Copyright © 2026 Blitz-StreetZX.com. All Rights Reserved.</p>
+                <p class="copyright-text">Sports Car Garage & Gacha.</p>
+            </div>
+
+            <div class="brightness-control">
+                <label for="brightness" class="brightness-label">brightness:</label>
+                <input type="range" id="brightness" min="10" max="100" value="50" aria-label="Adjust Background Brightness">
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- POPUP RESULT MODAL -->
+    <div id="carGachaModal" class="gacha-modal-overlay">
+        <div class="gacha-modal-card">
+            <div class="gacha-modal-title">🏎️ NEW CAR UNLOCKED!</div>
+            <img id="gachaResultImg" class="gacha-result-img" src="logo.png" alt="Car Result">
+            <div id="gachaResultName" class="gacha-result-name">CAR NAME HERE</div>
+            <div id="gachaResultBonus" class="gacha-result-bonus">🎁 Bonus: Touhou Character Unlocked!</div>
+            <button class="btn-close-modal" onclick="closeCarModal()">ACCEPT CAR</button>
+        </div>
+    </div>
+
+    <!-- ENGINE SCRIPT -->
+    <script>
+        // EXPANDED DATABASE FOR 30 SPORTS CAR SLOTS
+        const EXTENDED_CAR_DATABASE = {
+            "car01": { name: "TOYOTA 86 GT 14R60 TURBO", img: "c1.jpg", bonusTouhou: "REIMU" },
+            "car02": { name: "NISSAN GTR35 NISMO 2020", img: "c2.jpg", bonusTouhou: "MARISA" },
+            "car03": { name: "PORSCHE CAYMAN 718 GT4", img: "c3.jpg", bonusTouhou: "UDONGEIN" },
+            "car04": { name: "ALPINE A110R", img: "c4.jpg", bonusTouhou: "TENSHI" },
+            "car05": { name: "TOYOTA GR SUPRA RZ BLITZ", img: "c5.jpg", bonusTouhou: "AYA" },
+            "car06": { name: "ASTON MARTIN VANTAGE V8 AM6", img: "c6.jpg", bonusTouhou: "OKUU" },
+            "car07": { name: "PORSCHE CARRERA GT3 991.1", img: "c7.jpg", bonusTouhou: "JUNKO" },
+            "car08": { name: "FERRARI 488 GTB", img: "c8.jpg", bonusTouhou: "YUKARI" },
+            "car09": { name: "LAMBORGHINI HURACAN LP610-4", img: "c9.jpg", bonusTouhou: "YOUMU" },
+            "car10": { name: "AUDI R8 V10 PERFORMANCE", img: "c10.jpg", bonusTouhou: "YUYKUKO" },
+            "car11": { name: "BMW M4 DTM CHAMPION EDITION", img: "c11.jpg", bonusTouhou: "MIKO" },
+            "car12": { name: "MERCEDES BENZ AMG GTR PRE-FACELIFT", img: "c12.jpg", bonusTouhou: "SANAE" },
+            "car13": { name: "PORSCHE CARRERA GTS 991.2", img: "c13.jpg", bonusTouhou: "NITORI" },
+            "car14": { name: "LEXUS LC500", img: "c14.jpg", bonusTouhou: "SUIKA" },
+            "car15": { name: "HONDA NSX NC1 CONCEPT", img: "c15.jpg", bonusTouhou: "SAKUYA" },
+            "car16": { name: "LOTUS EMIRA FIRST EDITION", img: "c16.jpg", bonusTouhou: "REMILIA" },
+            "car17": { name: "ALFA ROMEO 4C TYPE-960", img: "c17.jpg", bonusTouhou: "FLANDRE" },
+            "car18": { name: "TOYOTA GR-86 RZ BLITZ", img: "c18.jpg", bonusTouhou: "SUMIREKO" },
+            "car19": { name: "TOYOTA GR-86 SZ", img: "c19.jpg", bonusTouhou: "RENKO" },
+            "car20": { name: "SUBARU BRZ ZD8 STI SPORTS", img: "c20.jpg", bonusTouhou: "MARIBEL" },
+            "car21": { name: "PORSCHE CAYMAN 718 STYLE EDITION", img: "c21.jpg", bonusTouhou: "REI'SEN" },
+            "car22": { name: "MAZDA RX8", img: "c22.jpg", bonusTouhou: "th22" },
+            "car23": { name: "MAZDA MIATA SPIRIT RACING 12R", img: "c23.jpg", bonusTouhou: "RAN" },
+            "car24": { name: "SUBARU IMPREZA WRX STI TYPE-C", img: "c24.jpg", bonusTouhou: "NAREKO" },
+            "car25": { name: "AUDI TT COUPE", img: "c25.jpg", bonusTouhou: "ENOKO" },
+            "car26": { name: "BMW M2 COUPE F87", img: "c26.jpg", bonusTouhou: "MEILING" },
+            "car27": { name: "NISSAN RZ34 ST VERSION", img: "c27.jpg", bonusTouhou: "NARUMI" },
+            "car28": { name: "HONDA S2000 AP2", img: "c28.jpg", bonusTouhou: "JO'ON" },
+            "car29": { name: "MITSUBISHI LANCER EVO 9 MR", img: "c29.jpg", bonusTouhou: "SEIJA" },
+            "car30": { name: "TOYOTA 86GT KOUKI TRD SUPERCHARGE", img: "c30.jpg", bonusTouhou: "NUE" }
+        };
+
+        const TOUHOU_NAME_MAP = {
+            "th01": "Reimu Hakurei", "th02": "Marisa Kirisame", "th03": "Reisen Udongein Inaba",
+            "th04": "Tenshi Hinanawi", "th05": "Aya Shameimaru", "th06": "Utsuho Reiuji",
+            "th07": "Junko", "th08": "Yukari Yakumo", "th09": "Youmu Konpaku",
+            "th10": "Yuyuko Saigyouji", "th11": "Toyosatomimi no Miko", "th12": "Sanae Kochiya",
+            "th13": "Nitori Kawashiro", "th14": "Suika Ibuki", "th15": "Sakuya Izayoi",
+            "th16": "Remilia Scarlet", "th17": "Flandre Scarlet", "th18": "Sumireko Usami",
+            "th19": "Renko Usami", "th20": "Maribel Hearn", "th21": "Rei'sen",
+            "th22": "Ran Yakumo", "th23": "Nareko Michigami", "th24": "Hina Kagiyama",
+            "th25": "Enoko Mitsugashira", "th26": "Hong Meiling", "th27": "Narumi Yatadera",
+            "th28": "Jo'on Yorigami", "th29": "Seija Kijin", "th30": "Nue Houjuu"
+        };
+
+        function getStoredCoins() {
+            const val = localStorage.getItem('touhou_user_coins');
+            return val !== null ? parseInt(val) : 1000;
+        }
+
+        function setStoredCoins(val) {
+            localStorage.setItem('touhou_user_coins', val.toString());
+        }
+
+        let userCoins = getStoredCoins();
+        let carGarage = JSON.parse(localStorage.getItem('blitz_car_garage')) || {};
+        let touhouProgress = JSON.parse(localStorage.getItem('touhou_card_progress')) || {};
+
+        // RENDER DYNAMIC SLOTS FOR 19 - 30
+        function renderCustomSlots() {
+            const container = document.getElementById('carGridContainer');
+            for (let i = 19; i <= 30; i++) {
+                const id = "car" + (i < 10 ? "0" + i : i);
+                const carData = EXTENDED_CAR_DATABASE[id];
+                if (!carData) continue;
+
+                if (!document.querySelector(`.car-card[data-car-id="${id}"]`)) {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'car-card locked';
+                    cardDiv.setAttribute('data-car-id', id);
+                    cardDiv.setAttribute('data-name', carData.name);
+                    cardDiv.setAttribute('data-img', carData.img);
+
+                    cardDiv.innerHTML = `
+                        <div class="car-lock-overlay"><div class="car-lock-icon">🔒</div>LOCKED CAR</div>
+                        <div class="car-image-wrapper">
+                            <span class="car-badge">#${i}</span>
+                            <img src="${carData.img}" onerror="this.src='logo.png'" alt="${carData.name}" loading="lazy" />
+                        </div>
+                        <div class="car-info">
+                            <h2 class="car-title">${carData.name}</h2>
+                            <p class="car-description">High performance supercar asset slot #${i}. Unlock this vehicle via Sports Car Single Gacha Machine!</p>
+                            <a href="#" class="car-footer-btn" onclick="playClick(); return false;">DETAILS</a>
+                        </div>
+                    `;
+                    container.appendChild(cardDiv);
+                }
+            }
+        }
+
+        function updateCarGarageUI() {
+            document.getElementById('carCoinsDisplay').innerText = userCoins;
+
+            Object.keys(EXTENDED_CAR_DATABASE).forEach(carId => {
+                const card = document.querySelector(`.car-card[data-car-id="${carId}"]`);
+                if (card) {
+                    if (carGarage[carId]) {
+                        card.classList.remove('locked');
+                        card.classList.add('unlocked');
+                        const lockOverlay = card.querySelector('.car-lock-overlay');
+                        if (lockOverlay) lockOverlay.style.display = 'none';
+                    } else {
+                        card.classList.add('locked');
+                        card.classList.remove('unlocked');
+                        const lockOverlay = card.querySelector('.car-lock-overlay');
+                        if (lockOverlay) lockOverlay.style.display = 'flex';
+                    }
+                }
+            });
+        }
+
+        // PULL SINGLE CAR GACHA (1X ONLY)
+        function pullCarGacha() {
+            playClick();
+            userCoins = getStoredCoins();
+
+            if (userCoins < 2000) {
+                alert("🪙 Not enough Credits! You need at least 2000 Credits for a 1x Car Gacha Pull.");
+                return;
+            }
+
+            const allCarKeys = Object.keys(EXTENDED_CAR_DATABASE);
+            const lockedCars = allCarKeys.filter(key => !carGarage[key]);
+
+            if (lockedCars.length === 0) {
+                alert("🎉 Congratulations! All 30 Cars in the garage are fully unlocked!");
+                return;
+            }
+
+            userCoins -= 2000;
+            setStoredCoins(userCoins);
+
+            // SELECT RANDOM CAR FROM LOCKED ONES
+            const wonCarKey = lockedCars[Math.floor(Math.random() * lockedCars.length)];
+            const carItem = EXTENDED_CAR_DATABASE[wonCarKey];
+
+            // MARK CAR AS UNLOCKED
+            carGarage[wonCarKey] = true;
+            localStorage.setItem('blitz_car_garage', JSON.stringify(carGarage));
+
+            // GRANT BONUS TOUHOU CARD
+            const bonusCharKey = carItem.bonusTouhou;
+            const touhouName = TOUHOU_NAME_MAP[bonusCharKey] || "Touhou Character Card";
+            touhouProgress[bonusCharKey] = (touhouProgress[bonusCharKey] || 0) + 1;
+            localStorage.setItem('touhou_card_progress', JSON.stringify(touhouProgress));
+
+            // UPDATE GARAGE DISPLAY
+            updateCarGarageUI();
+
+            // POPUP RESULT MODAL
+            document.getElementById('gachaResultImg').src = carItem.img;
+            document.getElementById('gachaResultName').innerText = carItem.name;
+            document.getElementById('gachaResultBonus').innerText = `🎁 BONUS TOUHOU CARD RECEIVED:\n+1 Card "${touhouName}" (${bonusCharKey.toUpperCase()})`;
+
+            document.getElementById('carGachaModal').classList.add('active');
+        }
+
+        function closeCarModal() {
+            playClick();
+            document.getElementById('carGachaModal').classList.remove('active');
+        }
+
+        // INIT ON LOAD
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCustomSlots();
+            updateCarGarageUI();
+        });
+
+        // SYSTEM UTILITIES
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) setTimeout(() => splash.classList.add('fade-out'), 400);
+        });
+
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                document.documentElement.style.setProperty('--bg-brightness', e.target.value + '%');
+            });
+        }
+
+        function playClick() {
+            const sfx = document.getElementById('sfx-click');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        function toggleBGM(e) {
+            const bgm = document.getElementById('bgm-audio');
+            const btn = document.getElementById('bgm-btn');
+            if (!bgm || !btn) return;
+
+            if (bgm.paused) {
+                bgm.volume = 0.5;
+                bgm.play().then(() => {
+                    btn.innerText = '🎵 BGM: ON';
+                    btn.classList.add('playing');
+                    btn.classList.remove('muted');
+                }).catch(err => console.error(err));
+            } else {
+                bgm.pause();
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('playing');
+                btn.classList.add('muted');
+            }
+        }
+    </script>
+</body>
+</html>

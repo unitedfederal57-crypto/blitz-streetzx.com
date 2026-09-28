@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- STYLESHEET V5.0.0 ULTIMATE CYBER ENGINE -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ==========================================================================
+           --- V5.0.0 ULTIMATE ENGINE: CONTACT PAGE CUSTOM STYLING ---
+           ========================================================================== */
+        .contact-card {
+            background: var(--card-bg, rgba(10, 18, 25, 0.88));
+            border: 1px solid var(--card-border, rgba(0, 255, 255, 0.3));
+            border-radius: var(--radius-lg, 12px);
+            padding: 32px;
+            max-width: 900px;
+            margin: 20px auto;
+            box-shadow: var(--shadow-main, 0 12px 40px rgba(0, 0, 0, 0.65));
+            backdrop-filter: var(--v5-blur-backdrop, blur(18px));
+            -webkit-backdrop-filter: var(--v5-blur-backdrop, blur(18px));
+            color: var(--text-light, #f0f4f8);
+            transition: border-color var(--transition-smooth, 0.32s ease), box-shadow var(--transition-smooth, 0.32s ease);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--v5-cyber-gradient, linear-gradient(90deg, #00ffff, #0088cc, #ff0055));
+            box-shadow: var(--shadow-glow, 0 0 22px rgba(0, 255, 255, 0.45));
+        }
+
+        .contact-card:hover {
+            border-color: var(--card-border-hover, rgba(0, 255, 255, 0.85));
+            box-shadow: var(--shadow-glow-lg, 0 0 40px rgba(0, 255, 255, 0.65));
+        }
+
+        .contact-header {
+            text-align: center;
+            border-bottom: 1px dashed rgba(0, 255, 255, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+        }
+
+        .contact-title {
+            font-family: var(--font-heading, 'Orbitron', sans-serif);
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--accent-color, #00ffff);
+            text-shadow: 0 0 12px var(--accent-glow, rgba(0, 255, 255, 0.45));
+            margin-bottom: 8px;
+        }
+
+        .contact-subtitle {
+            font-size: 14px;
+            color: var(--text-muted, #a0aec0);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .contact-item {
+            background: rgba(0, 35, 40, 0.4);
+            border: 1px solid var(--card-border, rgba(0, 255, 255, 0.3));
+            border-radius: var(--radius-md, 10px);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--text-light, #ffffff);
+            transition: all var(--transition-fast, 0.18s ease);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .contact-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-color, #00ffff);
+            transition: background var(--transition-fast, 0.18s ease);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-4px);
+            background: rgba(0, 85, 90, 0.35);
+            border-color: var(--accent-color, #00ffff);
+            box-shadow: var(--shadow-glow, 0 0 22px rgba(0, 255, 255, 0.45));
+        }
+
+        .contact-item:hover::before {
+            background: var(--accent-pink, #ff0055);
+        }
+
+        .contact-icon {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            background: rgba(5, 11, 16, 0.8);
+            border-radius: var(--radius-sm, 6px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .contact-platform {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-pink, #ff0055);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-handle {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--text-light, #ffffff);
+            letter-spacing: 0.5px;
+        }
+
+        .contact-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: var(--radius-pill, 50px);
+            background: rgba(0, 255, 255, 0.15);
+            color: var(--accent-color, #00ffff);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 640px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-sports-car">
+
+    <!-- SPLASH SCREEN / INTRO LOADING (v5.0.0 ENGINE) -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="splash-logo" />
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="countainer">
+
+        <!-- NAVIGATION BAR (v5.0.0) -->
+        <nav class="countainer-navbar"> 
+            <ul class="ul-navbar">
+                <li class="li-navbar"><a href="index.html" class="a-navbar" onclick="playClick()">HOME</a></li>
+                <li class="li-navbar"><a href="about.html" class="a-navbar" onclick="playClick()">ABOUT ME</a></li>
+                <li class="li-navbar"><a href="sportscar.html" class="a-navbar" onclick="playClick()">FAVORITE SPORTS CAR</a></li>
+                <li class="li-navbar"><a href="touhou.html" class="a-navbar" onclick="playClick()">FAVORITE TOUHOU CHARACTER</a></li>
+                <li class="li-navbar"><a href="location.html" class="a-navbar" onclick="playClick()">FAVORITE LOCATION</a></li>
+                <li class="li-navbar"><a href="contact.html" class="a-navbar active" onclick="playClick()">CONTACT ME</a></li>
+            </ul>
+
+            <div class="logo-container">
+                <a href="index.html" onclick="playClick()">
+                    <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+                </a>
+            </div>
+        </nav>
+
+        <!-- SFX Suara Klik -->
+    <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+    <!-- Audio Musik BGM -->
+    <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+    <!-- BGM CONTROLLER BUTTON (v5.0.0 ENHANCED) -->
+    <div class="bgm-wrapper">
+        <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+            🎵 BGM: OFF
+        </button>
+    </div>
+
+        <!-- MAIN CONTENT CONTACT ME -->
+        <main class="page-content">
+            <div class="card-box contact-card">
+                <div class="contact-header">
+                    <h1 class="contact-title v5-cyber-text-gradient">GET IN TOUCH</h1>
+                    <p class="contact-subtitle">Have questions or want to connect? Reach out to me via the platforms below.</p>
+                </div>
+
+                <div class="contact-grid">
+                    <a href="https://www.facebook.com/Raydo120" target="_blank" rel="noopener noreferrer" class="contact-item" onclick="playClick()">
+                        <span class="contact-badge">SOCIAL</span>
+                        <div class="contact-icon">📘</div>
+                        <div class="contact-info">
+                            <span class="contact-platform">Facebook</span>
+                            <span class="contact-handle">Raydo120</span>
+                        </div>
+                    </a>
+
+                    <a href="https://x.com/Raydo_san12" target="_blank" rel="noopener noreferrer" class="contact-item" onclick="playClick()">
+                        <span class="contact-badge">SOCIAL</span>
+                        <div class="contact-icon">🐦</div>
+                        <div class="contact-info">
+                            <span class="contact-platform">X (Twitter)</span>
+                            <span class="contact-handle">@Raydo_san12</span>
+                        </div>
+                    </a>
+
+                    <a href="https://discord.gg/rRpnfCYsTR" target="_blank" rel="noopener noreferrer" class="contact-item" onclick="playClick()">
+                        <span class="contact-badge">COMMUNITY</span>
+                        <div class="contact-icon">💬</div>
+                        <div class="contact-info">
+                            <span class="contact-platform">Discord Community</span>
+                            <span class="contact-handle">Join Official Server</span>
+                        </div>
+                    </a>
+
+                    <a href="https://www.youtube.com/@Raydo120" target="_blank" rel="noopener noreferrer" class="contact-item" onclick="playClick()">
+                        <span class="contact-badge">CHANNEL</span>
+                        <div class="contact-icon">▶️</div>
+                        <div class="contact-info">
+                            <span class="contact-platform">YouTube Channel</span>
+                            <span class="contact-handle">Raydo BL⚡TZ</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- FOOTER / COPYRIGHT (v5.0.0 UPGRADE) -->
+        <footer class="copyright-container">
+            <div class="copyright-content">
+                <p class="copyright-text">Copyright © 202X Blitz-StreetZX.com. All Rights Reserved.</p>
+                <p class="copyright-text">This is a personal website.</p>
+            </div>
+
+            <!-- CONTROL BRIGHTNESS SLIDER -->
+            <div class="brightness-control">
+                <label for="brightness" class="brightness-label">Brightness:</label>
+                <input type="range" id="brightness" min="10" max="100" value="50">
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM V5.0.0 -->
+    <script>
+        // Splash Screen Handler
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 400);
+            }
+        });
+
+        // Brightness Controller Sync
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                document.documentElement.style.setProperty('--bg-brightness', e.target.value + '%');
+            });
+        }
+
+        // SFX Click Player
+        function playClick() {
+            const sfx = document.getElementById('sfx-click');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        // BGM Audio Controller
+        function toggleBGM() {
+            const bgm = document.getElementById('bgm-audio');
+            const btn = document.getElementById('bgm-btn');
+            
+            if (!bgm || !btn) return;
+
+            if (bgm.paused) {
+                bgm.volume = 0.5;
+                bgm.play().then(() => {
+                    btn.innerText = '🎵 BGM: ON';
+                    btn.classList.add('playing');
+                    btn.classList.remove('muted');
+                }).catch(err => console.error('BGM Autoplay blocked:', err));
+            } else {
+                bgm.pause();
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('playing');
+                btn.classList.add('muted');
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

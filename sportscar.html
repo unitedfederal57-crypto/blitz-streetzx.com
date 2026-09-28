@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BLITZ-STREETZX - Favorite Sports Car List v5.0.0 Engine">
+    <meta name="theme-version" content="5.0.0">
+    <meta name="theme-color" content="#00ffff">
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- KODE LOGO TAB BROWSER (FAVICON) -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- STYLESHEET V5.0.0 ULTIMATE ENGINE -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Gaya khusus Grid Sports Car Engine v5.0.0 */
+        .car-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            padding: 20px 40px;
+            box-sizing: border-box;
+        }
+
+        .car-card {
+            background: var(--card-bg, rgba(10, 18, 25, 0.88));
+            border: 1px solid var(--card-border, rgba(0, 255, 255, 0.2));
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .car-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-color, #00ffff);
+            box-shadow: 0 12px 28px rgba(0, 255, 255, 0.3);
+        }
+
+        .car-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+            background-color: #050b10;
+        }
+
+        .car-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+        .car-card:hover .car-image-wrapper img {
+            transform: scale(1.08);
+            filter: brightness(1.05);
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 35, 45, 0.85);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+            z-index: 2;
+        }
+
+        .car-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .car-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .car-description {
+            font-size: 12.5px;
+            color: #a0aec0;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .car-footer-btn {
+            display: inline-block;
+            text-align: center;
+            background-color: rgba(0, 255, 255, 0.08);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.35);
+            padding: 9px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .car-footer-btn:hover {
+            background-color: #00ffff;
+            color: #000000;
+            box-shadow: 0 0 14px rgba(0, 255, 255, 0.7);
+            border-color: #00ffff;
+        }
+
+        /* COMING SOON CARD STYLING FOR SPORTS CAR */
+        .car-card.coming-soon {
+            border: 2px dashed rgba(0, 255, 255, 0.4);
+            background: rgba(10, 18, 25, 0.6);
+            cursor: default;
+            min-height: 330px;
+        }
+
+        .car-card.coming-soon:hover {
+            transform: none;
+            border-color: rgba(0, 255, 255, 0.7);
+            box-shadow: 0 0 18px rgba(0, 255, 255, 0.2);
+        }
+
+        .coming-soon-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .coming-soon-icon {
+            font-size: 32px;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        .coming-soon-text {
+            color: #00ffff;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* V5.0.0 Brightness Control Styling Improvement */
+        .brightness-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brightness-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a0aec0;
+        }
+
+        @media (max-width: 768px) {
+            .car-grid-container {
+                padding: 15px 16px;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-sports-car">
+
+    <!-- SPLASH SCREEN / INTRO LOADING (V5.0.0) -->
+    <div id="splash-screen" role="status" aria-live="polite">
+        <div class="splash-content">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="splash-logo" />
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="countainer">
+
+        <nav class="countainer-navbar"> 
+            <ul class="ul-navbar">
+                <!-- Hanya HOME yang punya class="active" di index.html -->
+                <li class="li-navbar"><a href="index.html" class="a-navbar" onclick="playClick()">HOME</a></li>
+                <li class="li-navbar"><a href="about.html" class="a-navbar" onclick="playClick()">ABOUT ME</a></li>
+                <li class="li-navbar"><a href="sportscar.html" class="a-navbar active" onclick="playClick()">FAVORITE SPORTS CAR</a></li>
+                <li class="li-navbar"><a href="touhou.html" class="a-navbar" onclick="playClick()">FAVORITE TOUHOU CHARACTER</a></li>
+                <li class="li-navbar"><a href="location.html" class="a-navbar" onclick="playClick()">FAVORITE LOCATION</a></li>
+                <li class="li-navbar"><a href="contact.html" class="a-navbar" onclick="playClick()">CONTACT ME</a></li>
+            </ul>
+
+            <div class="logo-container">
+                <a href="index.html" onclick="playClick()">
+                    <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+                </a>
+            </div>
+        </nav>
+
+        <!-- SFX Suara Klik -->
+    <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+    <!-- Audio Musik BGM -->
+    <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+    <!-- BGM CONTROLLER BUTTON (v5.0.0 ENHANCED) -->
+    <div class="bgm-wrapper">
+        <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+            🎵 BGM: OFF
+        </button>
+    </div>
+
+        <!-- MAIN CONTENT SPORTS CAR -->
+        <main class="car-grid-container">
+
+            <!-- SLOT 1 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#01</span>
+                    <img src="c1.jpg" alt="TOYOTA 86 GT 14R60 TURBO" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA 86 GT 14R60 TURBO</h2>
+                    <p class="car-description">It is equipped with a 4U-GSE (the Toyota version of Subaru's FA20D), a Naturally-Aspirated Engine that is mated to a 6-speed Toyota TL70 (Aisin AZ6) manual transmission, with tuneup and TURBO produce 320hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kanata_Rivington%27s_Toyota_86" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 2 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#02</span>
+                    <img src="c2.jpg" alt="NISSAN GTR35 NISMO 2020" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">NISSAN GTR35 NISMO 2020</h2>
+                    <p class="car-description">It is equipped with a VR38DETT, a twin-turbocharged engine which is mated to a 6-speed BorgWarner GR6Z30A dual-clutch transmission, stock engine produce 600hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Shun_Aiba%27s_Nissan_GT-R_Nismo_(2020)" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 3 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#03</span>
+                    <img src="c3.jpg" alt="PORSCHE CAYMAN 718 GT4" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CAYMAN 718 GT4</h2>
+                    <p class="car-description">The Cayman is equipped with an MDG, a naturally-aspirated engine mated to a 6-speed manual transmission, stock engine produce 420hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Michael_Beckenbauer%27s_Porsche_718_Cayman_GT4" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 4 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#04</span>
+                    <img src="c4.jpg" alt="ALPINE A110R" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ALPINE A110R</h2>
+                    <p class="car-description">The A110R is equipped with a Renault TCe M5Pt (Renault/Alpine's version of Nissan's MR18DDT), a turbocharged engine which is mated to a 7-speed 7DCT300 dual-clutch transmission, stock engine produce 304hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kouki_Sawatari%27s_Alpine_A110R" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 5 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#05</span>
+                    <img src="c5.jpg" alt="TOYOTA GR SUPRA RZ BLITZ" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA GR SUPRA RZ BLITZ</h2>
+                    <p class="car-description">It is equipped with a B58, a turbocharged engine that is mated to an 8-speed ZF 8HP automatic transmission, with tuneup produce 400hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Sena_Moroboshi%27s_Toyota_GR_Supra_RZ" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 6 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#06</span>
+                    <img src="c6.jpg" alt="ASTON MARTIN VANTAGE V8 AM6" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ASTON MARTIN VANTAGE V8 AM6</h2>
+                    <p class="car-description">The Aston Martin is equipped with a Mercedes-AMG M177, a twin-turbocharged engine that is mated to a 8-speed ZF 8HP75 automatic transmission, stock engine produce 510hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Emma_Greene%27s_Aston_Martin_V8_Vantage" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 7 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#07</span>
+                    <img src="c7.jpg" alt="PORSCHE CARRERA GT3 991.1" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CARRERA GT3 991.1</h2>
+                    <p class="car-description">It is equipped with a MA1.75, a naturally-aspirated engine which is mated to a 7-speed PDK transmission, with tuneup produce 500hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Fujin_Ishigami%27s_Porsche_911_GT3" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 8 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#08</span>
+                    <img src="c8.jpg" alt="FERRARI 488 GTB" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">FERRARI 488 GTB</h2>
+                    <p class="car-description">It is equipped with a F154, a twin-turbocharged engine which is mated to a 7-speed dual-clutch transmission, with tuneup produce 700hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kaito_Akaba%27s_Ferrari_488_GTB" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 9 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#09</span>
+                    <img src="c9.jpg" alt="LAMBORGHINI HURACAN LP610-4" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LAMBORGHINI HURACAN LP610-4</h2>
+                    <p class="car-description">The Huracán is equipped with a Lamborghini Odd-Firing V10, a Naturally Aspirated engine which is mated to a 7-speed dual-clutch transmission. The Huracán produces 610hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Daigo_Oishi%27s_Lamborghini_Hurac%C3%A1n" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 10 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#10</span>
+                    <img src="c10.jpg" alt="AUDI R8 V10 PERFORMANCE QUATTRO" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">AUDI R8 V10 PERFORMANCE QUATTRO</h2>
+                    <p class="car-description">It is equipped with a Lamborghini Odd-Firing V10, a naturally aspirated engine which is mated to a 7-speed DL800 S-Tronic dual clutch transmission, stock engine produce 620hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Yudai_Sakamoto%27s_Audi_R8_V10_Performance_Quattro" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 11 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#11</span>
+                    <img src="c11.jpg" alt="BMW M4 DTM CHAMPION EDITION" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">BMW M4 DTM CHAMPION EDITION</h2>
+                    <p class="car-description">It is equipped with an S55, a twin-turbocharged engine which is mated to a 7-speed dual-clutch transmission. It made 500hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Takuya_Yanagida%27s_BMW_M4_DTM_Champion_Edition" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 12 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#12</span>
+                    <img src="c12.jpg" alt="MERCEDES BENZ AMG GTR PRE-FACELIFT" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">MERCEDES BENZ AMG GTR PRE-FACELIFT</h2>
+                    <p class="car-description">It is equipped with an M178, a twin-turbocharged engine which is mated to a 7-speed AMG SPEEDSHIFT DCT 7G-Tronic dual-clutch Transmission. It made 585hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Yosuke_Ohtani%27s_Mercedes_AMG_GT_R" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 13 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#13</span>
+                    <img src="c13.jpg" alt="PORSCHE CARRERA GTS 991.2" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">PORSCHE CARRERA GTS 991.2</h2>
+                    <p class="car-description">It is equipped with a MDC/JA, a turbocharged engine which is mated to a 7-speed PDK Transmission. It made 450hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Jackson_Taylor%27s_Porsche_911_Carrera_GTS" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 14 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#14</span>
+                    <img src="c14.jpg" alt="LEXUS LC500" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LEXUS LC500</h2>
+                    <p class="car-description">It is equipped with a 2UR-GSE, a naturally-aspirated engine that is mated to a 10-speed Direct Shift Aisin AWR10L65 Automatic Transmission. It made 477hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Emile_H%C3%A4nninen%27s_Lexus_LC500" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 15 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#15</span>
+                    <img src="c15.jpg" alt="HONDA NSX NC1 CONCEPT" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">HONDA NSX NC1 CONCEPT</h2>
+                    <p class="car-description">It is equipped with a JNC1, a twin-turbocharged engine (with the Hybrid Motors removed) that is mated to a 9-speed dual-clutch transmission, stock engine produce 507hp (With Hybrid engine produce 582hp).</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kazuhiro_Maezono%27s_Honda_NSX" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 16 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#16</span>
+                    <img src="c16.jpg" alt="LOTUS EMIRA FIRST EDITION" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">LOTUS EMIRA FIRST EDITION</h2>
+                    <p class="car-description">The Emira is equipped with a Toyota 2GR-FE, a supercharged engine that is mated to a 6-speed manual transmission, stock engine produce 406hp.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Kakeru_Yashio%27s_Lotus_Emira" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 17 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#17</span>
+                    <img src="c17.jpg" alt="ALFA ROMEO 4C TYPE-960" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">ALFA ROMEO 4C TYPE-960</h2>
+                    <p class="car-description">It is equipped with a 1750 TBi, a turbocharged engine that is mated to a 6-speed Dual Dry Clutch Transmission, stock engine 240hp later tuneup with ecu level 2 and power is UNKNWON.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Nozomi_Kitahara%27s_Alfa_Romeo_4C" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 18 -->
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    <span class="car-badge">#18</span>
+                    <img src="c18.jpg" alt="TOYOTA GR-86 RZ BLITZ" loading="lazy" />
+                </div>
+                <div class="car-info">
+                    <h2 class="car-title">TOYOTA GR-86 RZ BLITZ</h2>
+                    <p class="car-description">It is equipped with an FA24D, a naturally-aspirated engine that is mated to a 6-speed Toyota TL70 (Aisin AZ6) manual transmission, with tuneup engine produce over 235hp+.</p>
+                    <a href="https://mfghost.fandom.com/wiki/Mai_Sakurano%27s_Toyota_GR86" target="_blank" rel="noopener noreferrer" class="car-footer-btn" onclick="playClick()">DETAILS</a>
+                </div>
+            </div>
+
+            <!-- SLOT 19: NEW FAVORITE COMING SOON -->
+            <div class="car-card coming-soon">
+                <div class="coming-soon-wrapper">
+                    <div class="coming-soon-icon">🏎️</div>
+                    <div class="coming-soon-text">New Favorite<br>Coming Soon</div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER / COPYRIGHT (V5.0.0 UPGRADE) -->
+        <footer class="copyright-container">
+            <div class="copyright-content">
+                <p class="copyright-text">Copyright © 202X Blitz-StreetZX.com. All Rights Reserved.</p>
+                <p class="copyright-text">This is a personal website.</p>
+            </div>
+
+            <!-- CONTROL BRIGHTNESS SLIDER DI DALAM FOOTER -->
+            <div class="brightness-control">
+                <label for="brightness" class="brightness-label">brightness:</label>
+                <input type="range" id="brightness" min="10" max="100" value="50" aria-label="Adjust Background Brightness">
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM V5.0.0 ULTIMATE ENGINE -->
+    <script>
+        // Splash Screen Hide Handler (Engine v5.0.0)
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 400);
+            }
+        });
+
+        // Brightness Controller Sync (Dynamic Root Variable)
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                document.documentElement.style.setProperty('--bg-brightness', val + '%');
+            });
+        }
+
+        // SFX Klik Navigasi
+        function playClick() {
+            const sfx = document.getElementById('sfx-click');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        // BGM Toggle Controller (v5.0.0 Autoplay Support)
+        function toggleBGM(e) {
+            const bgm = document.getElementById('bgm-audio');
+            const btn = document.getElementById('bgm-btn');
+            
+            if (!bgm || !btn) return;
+
+            if (bgm.paused) {
+                bgm.volume = 0.5;
+                bgm.play().then(() => {
+                    btn.innerText = '🎵 BGM: ON';
+                    btn.classList.add('playing');
+                    btn.classList.remove('muted');
+                }).catch(err => console.error('BGM Autoplay blocked:', err));
+            } else {
+                bgm.pause();
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('playing');
+                btn.classList.add('muted');
+            }
+        }
+    </script>
+    <script src="script.js" defer></script>
+</body>
+</html>

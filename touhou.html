@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-version" content="5.0.0">
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- STYLESHEET V5.0.0 ULTIMATE ENGINE -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .touhou-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .album-header-title {
+            text-align: center;
+            color: #00ffff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .touhou-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .th-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            aspect-ratio: 3 / 4;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+            cursor: pointer;
+        }
+
+        .th-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #00ffff;
+            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        /* COMING SOON CARD STYLING */
+        .th-card.coming-soon {
+            border: 2px dashed rgba(0, 255, 255, 0.4);
+            background: rgba(15, 23, 42, 0.6);
+            cursor: default;
+        }
+
+        .th-card.coming-soon:hover {
+            transform: none;
+            border-color: rgba(0, 255, 255, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .coming-soon-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            gap: 8px;
+        }
+
+        .coming-soon-icon {
+            font-size: 28px;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        .coming-soon-text {
+            color: #00ffff;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .th-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: linear-gradient(135deg, #ff0055, #ff5500);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 3px;
+            z-index: 2;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .th-image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #1a202c;
+        }
+
+        .th-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .th-name-tag {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 32, 0.92);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            padding: 6px 4px 4px 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 2;
+        }
+
+        .th-stars {
+            display: block;
+            color: #ffca28;
+            font-size: 10px;
+            margin-top: 2px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 202, 40, 0.8);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #0f172a;
+            border: 2px solid #ff0055;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 780px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.35);
+            overflow: hidden;
+            position: relative;
+            animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #ffffff;
+            font-family: inherit;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #1e293b, #0f172a);
+            padding: 10px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-title::before {
+            content: "■";
+            color: #ff0055;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            color: #ff0055;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-preview-card {
+            background: #1e293b;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .modal-preview-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-card-name {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            text-align: center;
+            padding: 8px 4px;
+            font-weight: bold;
+            font-size: 13px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-stars {
+            color: #ffca28;
+            font-size: 11px;
+            margin-top: 2px;
+            text-shadow: 0 0 5px rgba(255, 202, 40, 0.8);
+        }
+
+        .modal-right {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-box {
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid #ff0055;
+            padding: 10px 14px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .info-box-title {
+            color: #ff0055;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-box-desc {
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .line-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 8px 10px;
+            margin-top: 6px;
+            font-style: italic;
+            color: #e2e8f0;
+            font-size: 12.5px;
+        }
+
+        .line-box::before {
+            content: "💬 ";
+            font-style: normal;
+        }
+
+        .wiki-btn {
+            display: inline-block;
+            margin-top: 5px;
+            background: linear-gradient(135deg, #00ffff, #0088cc);
+            color: #0f172a;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: fit-content;
+            letter-spacing: 0.5px;
+        }
+
+        .wiki-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .touhou-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .touhou-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .th-name-tag { font-size: 10px; }
+            .th-stars { font-size: 8px; }
+            .modal-body { grid-template-columns: 1fr; }
+            .modal-preview-card { max-width: 180px; margin: 0 auto; }
+        }
+
+        @media (max-width: 480px) {
+            .touhou-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body class="bg-touhou">
+
+    <!-- SPLASH SCREEN / INTRO LOADING (V5.0.0) -->
+    <div id="splash-screen" role="status" aria-live="polite">
+        <div class="splash-content">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="splash-logo" />
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="countainer">
+
+        <nav class="countainer-navbar"> 
+    <ul class="ul-navbar">
+        <!-- Hanya HOME yang punya class="active" di index.html -->
+        <li class="li-navbar"><a href="index.html" class="a-navbar" onclick="playClick()">HOME</a></li>
+        <li class="li-navbar"><a href="about.html" class="a-navbar" onclick="playClick()">ABOUT ME</a></li>
+        <li class="li-navbar"><a href="sportscar.html" class="a-navbar" onclick="playClick()">FAVORITE SPORTS CAR</a></li>
+        <li class="li-navbar"><a href="touhou.html" class="a-navbar active" onclick="playClick()">FAVORITE TOUHOU CHARACTER</a></li>
+        <li class="li-navbar"><a href="location.html" class="a-navbar" onclick="playClick()">FAVORITE LOCATION</a></li>
+        <li class="li-navbar"><a href="contact.html" class="a-navbar" onclick="playClick()">CONTACT ME</a></li>
+    </ul>
+
+    <div class="logo-container">
+        <a href="index.html" onclick="playClick()">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+        </a>
+    </div>
+</nav>
+
+        <!-- SFX Suara Klik -->
+    <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+    <!-- Audio Musik BGM -->
+    <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+    <!-- BGM CONTROLLER BUTTON (v5.0.0 ENHANCED) -->
+    <div class="bgm-wrapper">
+        <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+            🎵 BGM: OFF
+        </button>
+    </div>
+
+        <!-- MAIN CONTENT TOUHOU -->
+        <main class="touhou-container">
+            <h1 class="album-header-title">🌸 TOUHOU CHARACTER ALBUM 🌸</h1>
+
+            <div class="touhou-grid" id="touhouGrid">
+
+                <!-- SLOT 1: Reimu Hakurei -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Reimu Hakurei"
+                     data-img="TH01.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Shrine Maiden of Paradise | Ability: Ability to float in the air"
+                     data-story="The shrine maiden of the Hakurei Shrine. She lives at the easternmost edge of Gensokyo and resolves various incidents to maintain peace."
+                     data-line1="&quot;Anyway, you're in my way. Move, or I'll shoot!&quot; (TH06 Reimu Scenario)"
+                     data-line2="&quot;Defeating youkai is my job. If I didn't, I wouldn't have anything to eat!&quot; (TH08 Reimu Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Reimu_Hakurei">
+                    <div class="th-image-container">
+                        <img src="TH01.jpg" alt="Reimu Hakurei" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Reimu Hakurei
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 2: Marisa Kirisame -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Marisa Kirisame"
+                     data-img="TH02.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Ordinary Magician | Ability: Ability to use magic"
+                     data-story="An ordinary human magician who lives in the Forest of Magic. She is a hard worker who researches magic using light and heat."
+                     data-line1="&quot;It's not magic unless it's flashy. Direct hit is best, ze!&quot; (TH08 Marisa Scenario)"
+                     data-line2="&quot;It's all right. Youkai don't catch colds, only fools do.&quot; (TH07 Marisa Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Marisa_Kirisame">
+                    <div class="th-image-container">
+                        <img src="TH02.jpg" alt="Marisa Kirisame" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Marisa Kirisame
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 3: Reisen Udongein Inaba -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Reisen Udongein Inaba"
+                     data-img="TH03.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Red Eyes of Madness | Ability: Manipulation of insanity"
+                     data-story="A Moon Rabbit who fled to Earth during the Lunar War. She currently resides at Eientei as an apprentice to Eirin Yagokoro."
+                     data-line1="&quot;Your eyes are already filled with insanity. You're completely mad!&quot; (TH08 Stage 5 Boss)"
+                     data-line2="&quot;I'm a moon rabbit who fled to Earth... But Earth isn't bad at all.&quot; (TH08 Ending)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Reisen_Udongein_Inaba">
+                    <div class="th-image-container">
+                        <img src="TH03.jpg" alt="Reisen Udongein Inaba" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Reisen Udongein Inaba
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 4: Tenshi Hinanawi -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Tenshi Hinanawi"
+                     data-img="TH04.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Girl of the Sphere of Neither Perception nor Non-Perception | Ability: Manipulation of earth"
+                     data-story="A Celestial residing in Heaven (Bhava-agra). Bored with her peaceful heavenly life, she caused earthquakes in Gensokyo to lure heroes."
+                     data-line1="&quot;Heaven is boring! There's no fun here! That's why I came to Earth!&quot; (TH10.5 Story Mode)"
+                     data-line2="&quot;The Sword of Hisou reveals the true nature of all spirits!&quot; (TH10.5 Boss Dialogue)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Tenshi_Hinanawi">
+                    <div class="th-image-container">
+                        <img src="TH04.jpg" alt="Tenshi Hinanawi" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Tenshi Hinanawi
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 5: Aya Shameimaru -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Aya Shameimaru"
+                     data-img="TH05.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Traditional Reporter of Fantasy | Ability: Ability to manipulate wind"
+                     data-story="A Crow Tengu reporter living on Youkai Mountain who writes the Bunbunmaru Newspaper, seeking scoops with incredible speed."
+                     data-line1="&quot;Ayayaya! Looks like another big scoops for my newspaper!&quot; (TH09 / TH10 Dialogue)"
+                     data-line2="&quot;Reporters must be faster than anyone else to get the news first!&quot; (TH09 Aya Victory Quote)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Aya_Shameimaru">
+                    <div class="th-image-container">
+                        <img src="TH05.jpg" alt="Aya Shameimaru" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Aya Shameimaru
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 6: Utsuho Reiuji -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Utsuho Reiuji"
+                     data-img="TH06.jpg"
+                     data-stars="★★★★★★★"
+                     data-title="Subterranean Sun | Ability: Ability to manipulate nuclear fusion"
+                     data-story="A Hell Raven who regulates the flames in Underground Geyser Center after gaining divine power by swallowing the divine bird Yatagarasu."
+                     data-line1="&quot;The ultimate power that creates a sun... Nuclear fusion!&quot; (TH11 Stage 6 Boss)"
+                     data-line2="&quot;I'll incinerate everything on the surface with my divine flames!&quot; (TH11 Pre-battle)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Utsuho_Reiuji">
+                    <div class="th-image-container">
+                        <img src="TH06.jpg" alt="Utsuho Reiuji" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Utsuho Reiuji
+                        <span class="th-stars">★★★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 7: Junko -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Junko"
+                     data-img="TH07.jpg"
+                     data-stars="★★★★★"
+                     data-title="Nameless Purified Spirit | Ability: Purification"
+                     data-story="A divine spirit consumed by pure resentment toward Chang'e. She possesses the ability to purify anything back to its raw, unadulterated essence."
+                     data-line1="&quot;My grudge has been purified to the point where I have become pure resentment itself.&quot; (TH15 Stage 6 Boss)"
+                     data-line2="&quot;Now, showcase the purity of your life against my pure hatred!&quot; (TH15 Final Battle)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Junko">
+                    <div class="th-image-container">
+                        <img src="TH07.jpg" alt="Junko" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Junko
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 8: Yukari Yakumo -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Yukari Yakumo"
+                     data-img="TH08.jpg"
+                     data-stars="★★★★★"
+                     data-title="Border of Phantasm | Ability: Manipulation of boundaries"
+                     data-story="An ancient youkai who was involved in the creation of the Great Hakurei Barrier. She spends most of her time sleeping."
+                     data-line1="&quot;Everything here belongs to the boundary. There is no escape.&quot; (TH07 Phantasm Stage)"
+                     data-line2="&quot;Humans are useful precisely because they are fragile and limited.&quot; (TH08 Yukari Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Yukari_Yakumo">
+                    <div class="th-image-container">
+                        <img src="TH08.jpg" alt="Yukari Yakumo" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Yukari Yakumo
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 9: Youmu Konpaku -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Youmu Konpaku"
+                     data-img="TH09.jpg"
+                     data-stars="★★★★★"
+                     data-title="Half-human Half-phantom | Ability: Ability to handle swordsmanship"
+                     data-story="The gardener and fencing master serving Yuyuko Saigyouji at Hakugyokurou in the Netherworld. She wields Roukanken and Hakuroken."
+                     data-line1="&quot;The things that cannot be cut by my Roukanken, forged by stars, are next to none!&quot; (TH07 Stage 5 Boss)"
+                     data-line2="&quot;I am half-human and half-phantom, but my blade is 100% sharp.&quot; (TH08 Youmu Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Youmu_Konpaku">
+                    <div class="th-image-container">
+                        <img src="TH09.jpg" alt="Youmu Konpaku" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Youmu Konpaku
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 10: Yuyuko Saigyouji -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Yuyuko Saigyouji"
+                     data-img="TH10.jpg"
+                     data-stars="★★★★★"
+                     data-title="Ghostly Person in the Netherworld | Ability: Ability to invoke death"
+                     data-story="The ghost princess who manages Hakugyokurou and oversees the ghosts of the Netherworld."
+                     data-line1="&quot;Even ghosts get hungry! Youmu, isn't dinner ready yet?&quot; (TH08 Yuyuko Scenario)"
+                     data-line2="&quot;Life is short, but death lasts forever. Welcome to the Netherworld.&quot; (TH07 Stage 6 Boss)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Yuyuko_Saigyouji">
+                    <div class="th-image-container">
+                        <img src="TH10.jpg" alt="Yuyuko Saigyouji" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Yuyuko Saigyouji
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 11: Toyosatomimi no Miko -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Toyosatomimi no Miko"
+                     data-img="TH11.jpg"
+                     data-stars="★★★★★"
+                     data-title="Shoutoku Taoist Master | Ability: Ability to listen to ten people's spoken words at the same time"
+                     data-story="A legendary Taoist saint who revived in Gensokyo. She possesses extraordinary insight into human desires and thoughts."
+                     data-line1="&quot;I can listen to ten people speaking at once, and hear all ten of their desires.&quot; (TH13 Stage 6 Boss)"
+                     data-line2="&quot;Harmony should be valued above all else in this realm.&quot; (TH13 Boss Dialogue)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Toyosatomimi_no_Miko">
+                    <div class="th-image-container">
+                        <img src="TH11.jpg" alt="Toyosatomimi no Miko" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Toyosatomimi no Miko
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 12: Sanae Kochiya -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Sanae Kochiya"
+                     data-img="TH12.jpg"
+                     data-stars="★★★★★"
+                     data-title="Deified Human of the Wind | Ability: Ability to cause miracles"
+                     data-story="A wind priestess who moved to the Moriya Shrine in Gensokyo from the Outside World, along with Kanako and Suwako."
+                     data-line1="&quot;You can't let yourself be trapped by common sense in Gensokyo!&quot; (TH12 Stage 5 Boss)"
+                     data-line2="&quot;As a living god, causing miracles is just part of my job!&quot; (TH12 Sanae Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Sanae_Kochiya">
+                    <div class="th-image-container">
+                        <img src="TH12.jpg" alt="Sanae Kochiya" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Sanae Kochiya
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 13: Nitori Kawashiro -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Nitori Kawashiro"
+                     data-img="TH13.jpg"
+                     data-stars="★★★★★"
+                     data-title="Super Engineer Kappa | Ability: Ability to manipulate water"
+                     data-story="A kappa engineer residing near the Genbu Ravine on Youkai Mountain, proficient in crafting machines and technology."
+                     data-line1="&quot;We kappa are master engineers! Humans and kappa have always been allies!&quot; (TH10 Stage 3 Boss)"
+                     data-line2="&quot;Technology is what turns fantasy into reality!&quot; (TH11 Nitori Support Dialogue)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Nitori_Kawashiro">
+                    <div class="th-image-container">
+                        <img src="TH13.jpg" alt="Nitori Kawashiro" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Nitori Kawashiro
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 14: Suika Ibuki -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Suika Ibuki"
+                     data-img="TH14.jpg"
+                     data-stars="★★★★★"
+                     data-title="Little Gathering Mist | Ability: Ability to manipulate density and sparseness"
+                     data-story="An oni who loves banquets and drinking sake. She can manipulate density to gather things or turn herself into giant forms and fog."
+                     data-line1="&quot;Where there's a banquet and sake, you'll always find me!&quot; (TH07.5 Story Mode)"
+                     data-line2="&quot;Density and sparseness... I can gather or scatter anything in existence.&quot; (TH07.5 Final Stage)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Suika_Ibuki">
+                    <div class="th-image-container">
+                        <img src="TH14.jpg" alt="Suika Ibuki" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Suika Ibuki
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 15: Sakuya Izayoi -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Sakuya Izayoi"
+                     data-img="TH15.jpg"
+                     data-stars="★★★★★"
+                     data-title="Maid of the Scarlet Devil Mansion | Ability: Ability to manipulate time"
+                     data-story="The chief maid of the Scarlet Devil Mansion who works for Remilia Scarlet. She wields knives with great precision alongside time manipulation."
+                     data-line1="&quot;Time, stop! Now, I shall tidy up this intruder.&quot; (TH06 Stage 5 Boss)"
+                     data-line2="&quot;My allegiance lies solely with the Mistress of the Scarlet Devil Mansion.&quot; (TH08 Sakuya Scenario)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Sakuya_Izayoi">
+                    <div class="th-image-container">
+                        <img src="TH15.jpg" alt="Sakuya Izayoi" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Sakuya Izayoi
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 16: Remilia Scarlet -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Remilia Scarlet"
+                     data-img="TH16.jpg"
+                     data-stars="★★★★★"
+                     data-title="The Scarlet Devil | Ability: Ability to manipulate fate"
+                     data-story="The vampire mistress of the Scarlet Devil Mansion. She is noble and childish, commanding fear across Gensokyo during the Scarlet Mist Incident."
+                     data-line1="&quot;The red mist shall cover the sky, and night will last forever!&quot; (TH06 Stage 6 Boss)"
+                     data-line2="&quot;Fate is already written in my favor. You cannot change destiny!&quot; (TH06 Pre-battle)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Remilia_Scarlet">
+                    <div class="th-image-container">
+                        <img src="TH16.jpg" alt="Remilia Scarlet" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Remilia Scarlet
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 17: Flandre Scarlet -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Flandre Scarlet"
+                     data-img="TH17.jpg"
+                     data-stars="★★★★★"
+                     data-title="Sister of the Devil | Ability: Ability to destroy absolutely anything"
+                     data-story="Remilia's younger sister who was kept inside the basement of the mansion due to her overwhelming power to destroy anything's eye."
+                     data-line1="&quot;If I squeeze the 'eye' in my hand... boom! Everything breaks!&quot; (TH06 Extra Stage Dialogue)"
+                     data-line2="&quot;Will you play with me? Please don't break too quickly like the rest!&quot; (TH06 Extra Boss)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Flandre_Scarlet">
+                    <div class="th-image-container">
+                        <img src="TH17.jpg" alt="Flandre Scarlet" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Flandre Scarlet
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 18: Sumireko Usami -->
+                <div class="th-card" onclick="openModal(this, event)"
+                     data-name="Sumireko Usami"
+                     data-img="TH18.jpg"
+                     data-stars="★★★★★"
+                     data-title="First President of the Secret Sealing Club | Ability: Ability to use psychokinesis"
+                     data-story="A high school student from the Outside World and founder of the Secret Sealing Club, who gained access to Gensokyo through her dreams."
+                     data-line1="&quot;High schoolers with ESP powers are the absolute coolest!&quot; (TH14.5 Story Mode)"
+                     data-line2="&quot;Gensokyo isn't just a dream to me, it's my alternative reality!&quot; (TH14.5 Dialogue)"
+                     data-wiki="https://en.touhouwiki.net/wiki/Sumireko_Usami">
+                    <div class="th-image-container">
+                        <img src="TH18.jpg" alt="Sumireko Usami" loading="lazy" />
+                    </div>
+                    <div class="th-name-tag">
+                        Sumireko Usami
+                        <span class="th-stars">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- SLOT 19: NEW FAVORITE COMING SOON -->
+                <div class="th-card coming-soon">
+                    <div class="coming-soon-wrapper">
+                        <div class="coming-soon-icon">✨</div>
+                        <div class="coming-soon-text">New Favorite<br>Coming Soon</div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- FOOTER / COPYRIGHT (V5.0.0 UPGRADE) -->
+        <footer class="copyright-container">
+            <div class="copyright-content">
+                <p class="copyright-text">Copyright © 202X Blitz-StreetZX.com. All Rights Reserved.</p>
+                <p class="copyright-text">This is a personal website.</p>
+            </div>
+
+            <!-- CONTROL BRIGHTNESS SLIDER -->
+            <div class="brightness-control">
+                <label for="brightness" class="brightness-label">brightness:</label>
+                <input type="range" id="brightness" min="10" max="100" value="50" aria-label="Adjust Background Brightness">
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODAL DETAILS -->
+    <div class="modal-overlay" id="charModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">CHARACTER DETAILS</div>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="modal-preview-card">
+                        <div class="th-badge">TH</div>
+                        <img id="modalImg" src="" alt="Character Image">
+                        <div class="modal-card-name">
+                            <span id="modalName">Name</span>
+                            <div class="modal-stars" id="modalStars">★★★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-right">
+                    <div class="info-box">
+                        <div class="info-box-title">| Character Title / Ability</div>
+                        <div class="info-box-desc" id="modalTitle">Loading...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">| Character Story</div>
+                        <div class="info-box-desc" id="modalStory">Loading story...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">| Character Lines (Canon In-Game Quotes)</div>
+                        <div class="line-box" id="modalLine1">"Loading line..."</div>
+                        <div class="line-box" id="modalLine2">"Loading line..."</div>
+                    </div>
+
+                    <div>
+                        <a id="modalWikiLink" href="#" target="_blank" rel="noopener noreferrer" class="wiki-btn">
+                            📖 Open Touhou Wiki Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM V5.0.0 ULTIMATE ENGINE -->
+    <script>
+        // Splash Screen Hide Handler
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 400);
+            }
+        });
+
+        // Brightness Controller Sync
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                document.documentElement.style.setProperty('--bg-brightness', e.target.value + '%');
+            });
+        }
+
+        // SFX Klik Navigasi Biasa
+        function playClick() {
+            const sfx = document.getElementById('sfx-click');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        // BGM Toggle Controller (v5.0.0 Autoplay Support)
+        function toggleBGM(e) {
+            const bgm = document.getElementById('bgm-audio');
+            const btn = document.getElementById('bgm-btn');
+            
+            if (!bgm || !btn) return;
+
+            if (bgm.paused) {
+                bgm.volume = 0.5;
+                bgm.play().then(() => {
+                    btn.innerText = '🎵 BGM: ON';
+                    btn.classList.add('playing');
+                    btn.classList.remove('muted');
+                }).catch(err => console.error('BGM Autoplay blocked:', err));
+            } else {
+                bgm.pause();
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('playing');
+                btn.classList.add('muted');
+            }
+        }
+    </script>
+    <script src="script.js" defer></script>
+    <script>
+        // Modal Event Handlers dengan Ripple Effect (v5.0.0)
+        function openModal(cardElement, e) {
+            playClick();
+
+            if (e && e.currentTarget) {
+                const target = e.currentTarget;
+                const rect = target.getBoundingClientRect();
+                const circle = document.createElement('span');
+                const diameter = Math.max(rect.width, rect.height);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${(e.clientX || (rect.left + rect.width / 2)) - rect.left - radius}px`;
+                circle.style.top = `${(e.clientY || (rect.top + rect.height / 2)) - rect.top - radius}px`;
+                circle.classList.add('ripple');
+
+                const existingRipple = target.querySelector('.ripple');
+                if (existingRipple) {
+                    existingRipple.remove();
+                }
+
+                target.appendChild(circle);
+            }
+
+            const name = cardElement.getAttribute('data-name');
+            const img = cardElement.getAttribute('data-img');
+            const stars = cardElement.getAttribute('data-stars');
+            const title = cardElement.getAttribute('data-title') || '-';
+            const story = cardElement.getAttribute('data-story') || '-';
+            const line1 = cardElement.getAttribute('data-line1') || '-';
+            const line2 = cardElement.getAttribute('data-line2') || '-';
+            const wiki = cardElement.getAttribute('data-wiki') || '#';
+
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalImg').src = img;
+            document.getElementById('modalStars').innerText = stars;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalStory').innerText = story;
+            document.getElementById('modalLine1').innerText = line1;
+            document.getElementById('modalLine2').innerText = line2;
+            document.getElementById('modalWikiLink').href = wiki;
+
+            document.getElementById('charModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('charModal').classList.remove('active');
+        }
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('charModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal using ESC key
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

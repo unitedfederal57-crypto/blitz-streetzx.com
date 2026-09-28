@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLITZ-STREETZX.COM</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
+
+    <!-- STYLESHEET V4.2 -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .location-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .album-header-title {
+            text-align: center;
+            color: #00ffff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .loc-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-main);
+            transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .loc-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-color);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* CARD COMING SOON / LOCKED */
+        .loc-card.coming-soon {
+            border: 2px dashed rgba(0, 255, 255, 0.4);
+            background: rgba(15, 23, 42, 0.4);
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .loc-card.coming-soon:hover {
+            transform: none;
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: none;
+        }
+
+        .loc-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #000000;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            z-index: 2;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+
+        .loc-badge.badge-locked {
+            background: rgba(255, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+
+        .loc-image-container {
+            width: 100%;
+            height: 190px;
+            position: relative;
+            background-color: #1a202c;
+            overflow: hidden;
+        }
+
+        .loc-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .loc-card:not(.coming-soon):hover .loc-image-container img {
+            transform: scale(1.08);
+        }
+
+        .loc-coming-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(15,23,42,0.8) 100%);
+        }
+
+        .loc-info {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .loc-name {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .loc-origin {
+            color: var(--accent-color);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .loc-short-desc {
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .loc-btn {
+            align-self: flex-start;
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all var(--transition-fast);
+        }
+
+        .loc-card:not(.coming-soon):hover .loc-btn {
+            background: var(--accent-color);
+            color: #000000;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .loc-btn.btn-disabled {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        @media (max-width: 992px) {
+            .location-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .location-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SPLASH SCREEN / INTRO LOADING -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="logo.png" alt="BLITZ-STREETZX Logo" class="splash-logo" />
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="countainer">
+
+        <!-- NAVIGATION BAR -->
+        <nav class="countainer-navbar"> 
+            <ul class="ul-navbar">
+                <li class="li-navbar"><a href="index.html" class="a-navbar" onclick="playClick()">HOME</a></li>
+                <li class="li-navbar"><a href="about.html" class="a-navbar" onclick="playClick()">ABOUT ME</a></li>
+                <li class="li-navbar"><a href="sportscar.html" class="a-navbar" onclick="playClick()">FAVORITE SPORTS CAR</a></li>
+                <li class="li-navbar"><a href="touhou.html" class="a-navbar" onclick="playClick()">FAVORITE TOUHOU CHARACTER</a></li>
+                <li class="li-navbar"><a href="location.html" class="a-navbar active" onclick="playClick()">FAVORITE LOCATION</a></li>
+                <li class="li-navbar"><a href="contact.html" class="a-navbar" onclick="playClick()">CONTACT ME</a></li>
+            </ul>
+
+            <div class="logo-container">
+                <a href="index.html" onclick="playClick()">
+                    <img src="logo.png" alt="BLITZ-STREETZX Logo" class="site-logo" />
+                </a>
+            </div>
+        </nav>
+        <!-- NAVIGATION BAR END -->
+
+        <!-- SFX Suara Klik -->
+    <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+    <!-- Audio Musik BGM -->
+    <audio id="bgm-audio" src="bgm.mp3" loop preload="auto"></audio>
+
+    <!-- BGM CONTROLLER BUTTON (v5.0.0 ENHANCED) -->
+    <div class="bgm-wrapper">
+        <button id="bgm-btn" class="bgm-box muted" onclick="toggleBGM(event)" aria-label="Toggle Background Music">
+            🎵 BGM: OFF
+        </button>
+    </div>
+        
+<!-- MAIN CONTENT LOCATIONS -->
+        <main class="location-container">
+            <h1 class="album-header-title">FAVORITE FICTIONAL LOCATIONS</h1>
+
+            <div class="location-grid" id="locationGrid">
+
+            <!-- LOCATION 1: HUMAN VILLAGE -->
+            <div class="loc-card" onclick="openModal(this)"
+                 data-name="Human Village"
+                 data-origin="Touhou Project"
+                 data-img="location1.jpg"
+                 data-tag="LOC #1"
+                 data-desc="The Human Village (Ningen no Sato) is the main residential area for human inhabitants in Gensokyo, featuring Meiji-era architectural aesthetics. It is considered the safest haven for humans, protected by Keine Kamishirasawa and monitored by the Youkai Sages."
+                 data-fact="Keine Kamishirasawa possesses the unique ability to 'conceal' the history of the village's existence from memory to safeguard it from external threats."
+                 data-wiki="https://en.touhouwiki.net/wiki/Human_Village">
+                <div class="loc-badge">LOC #1</div>
+                <div class="loc-image-container">
+                    <img src="location1.jpg" alt="Human Village" />
+                </div>
+                <div class="loc-info">
+                    <div class="loc-name">Human Village</div>
+                    <div class="loc-origin">Touhou Project</div>
+                    <div class="loc-short-desc">The primary and safest human settlement located in Gensokyo.</div>
+                    <div class="loc-btn">View Details</div>
+                </div>
+            </div>
+
+            <!-- LOCATION 2: EIENTEAI -->
+            <div class="loc-card" onclick="openModal(this)"
+                 data-name="Eientei"
+                 data-origin="Touhou 8: Imperishable Night (Debut)"
+                 data-img="location2.jpg"
+                 data-tag="LOC #2"
+                 data-desc="Eientei ('House of Eternity') is a grand, ancient wooden Japanese mansion hidden deep within the Bamboo Forest of the Lost. It serves as the residence for Kaguya Houraisan, Eirin Yagokoro, Reisen, Tewi, and various other Earth rabbits, while also functioning as a pharmacy and medical clinic."
+                 data-fact="Eirin Yagokoro formulates specialized medicines at Eientei, which are then distributed and sold to the Human Village by her disciple, Reisen Udongein Inaba."
+                 data-wiki="https://en.touhouwiki.net/wiki/Eientei">
+                <div class="loc-badge">LOC #2</div>
+                <div class="loc-image-container">
+                    <img src="location2.jpg" alt="Eientei" />
+                </div>
+                <div class="loc-info">
+                    <div class="loc-name">Eientei</div>
+                    <div class="loc-origin">Touhou Project</div>
+                    <div class="loc-short-desc">A grand wooden mansion hidden deep inside Gensokyo's Bamboo Forest.</div>
+                    <div class="loc-btn">View Details</div>
+                </div>
+            </div>
+
+                <!-- LOCATION 3: BAYVIEW -->
+                <div class="loc-card" onclick="openModal(this)"
+                     data-name="Bayview"
+                     data-origin="Need for Speed: Underground 2"
+                     data-img="location3.jpg"
+                     data-tag="LOC #3"
+                     data-desc="Bayview is a sprawling West Coast metropolis divided into 4 major districts: City Core, Beacon Hill, Jackson Heights, and Coal Harbor. The city serves as the main playground for night street racing in Need for Speed: Underground 2."
+                     data-fact="Bayview was heavily inspired by West Coast cities like Los Angeles and features iconic landmarks such as Bayview International Airport and the winding hill tracks of Jackson Heights."
+                     data-wiki="https://nfs.fandom.com/wiki/Bayview">
+                    <div class="loc-badge">LOC #3</div>
+                    <div class="loc-image-container">
+                        <img src="location3.jpg" alt="Bayview" />
+                    </div>
+                    <div class="loc-info">
+                        <div class="loc-name">Bayview</div>
+                        <div class="loc-origin">Need for Speed</div>
+                        <div class="loc-short-desc">A vibrant metropolis that acts as the core arena for Underground 2.</div>
+                        <div class="loc-btn">View Details</div>
+                    </div>
+                </div>
+
+                <!-- LOCATION 4: VENTURA BAY -->
+                <div class="loc-card" onclick="openModal(this)"
+                     data-name="Ventura Bay"
+                     data-origin="Need for Speed (2015)"
+                     data-img="location4.jpg"
+                     data-tag="LOC #4"
+                     data-desc="Ventura Bay is a dynamic nocturnal coastal city inspired by Los Angeles. It features interconnected highways across districts like Burnwood, Royal Park, El Rey, and Franklin Terrace, tailored for drift carving and high-speed cruising."
+                     data-fact="Ventura Bay was designed with a permanent night-to-dawn time cycle to deliver an authentic underground street racing atmosphere."
+                     data-wiki="https://nfs.fandom.com/wiki/Ventura_Bay">
+                    <div class="loc-badge">LOC #4</div>
+                    <div class="loc-image-container">
+                        <img src="location4.jpg" alt="Ventura Bay" />
+                    </div>
+                    <div class="loc-info">
+                        <div class="loc-name">Ventura Bay</div>
+                        <div class="loc-origin">Need for Speed</div>
+                        <div class="loc-short-desc">A neon-lit night city and coastal drift playground.</div>
+                        <div class="loc-btn">View Details</div>
+                    </div>
+                </div>
+
+                <!-- LOCATION 5: PALMONT CITY -->
+                <div class="loc-card" onclick="openModal(this)"
+                     data-name="Palmont City"
+                     data-origin="Need for Speed: Carbon"
+                     data-img="location5.jpg"
+                     data-tag="LOC #5"
+                     data-desc="Palmont City is a vast metropolitan area defined by street racing crew turf wars. It consists of Downtown, Fortuna, Kempton, and Silverton districts, all surrounded by treacherous mountain Canyon roads."
+                     data-fact="Each major district in Palmont City is controlled by a dominant racing crew: Bushido (Downtown), TFK (Fortuna), 21st Street (Kempton), and Stacked Deck (Silverton)."
+                     data-wiki="https://nfs.fandom.com/wiki/Palmont_City">
+                    <div class="loc-badge">LOC #5</div>
+                    <div class="loc-image-container">
+                        <img src="location5.jpg" alt="Palmont City" />
+                    </div>
+                    <div class="loc-info">
+                        <div class="loc-name">Palmont City</div>
+                        <div class="loc-origin">Need for Speed</div>
+                        <div class="loc-short-desc">A turf-war battleground metropolis famous for Canyon duels.</div>
+                        <div class="loc-btn">View Details</div>
+                    </div>
+                </div>
+
+                <!-- SLOT 6: NEW FAVORITE COMING SOON -->
+                <div class="loc-card coming-soon">
+                    <div class="loc-badge badge-locked">LOCKED</div>
+                    <div class="loc-image-container">
+                        <div class="loc-coming-placeholder">🔒</div>
+                    </div>
+                    <div class="loc-info">
+                        <div class="loc-name" style="color: rgba(255,255,255,0.6);">NEW LOCATION</div>
+                        <div class="loc-origin" style="color: rgba(0,255,255,0.5);">Unknown Universe</div>
+                        <div class="loc-short-desc">The next favorite location is currently under preparation. Stay tuned!</div>
+                        <div class="loc-btn btn-disabled">Coming Soon</div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- FOOTER / COPYRIGHT (V4.2) -->
+        <footer class="copyright-container">
+            <div class="copyright-content">
+                <p class="copyright-text">Copyright © 202X Blitz-StreetZX.com. All Rights Reserved.</p>
+                <p class="copyright-text">This is a personal website.</p>
+            </div>
+
+            <!-- CONTROL BRIGHTNESS SLIDER -->
+            <div class="brightness-control">
+                <label for="brightness" class="brightness-label">brightness:</label>
+                <input type="range" id="brightness" min="10" max="100" value="50">
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODAL DETAILS POP-UP -->
+    <div class="modal-overlay" id="locationModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">LOCATION DETAILS</div>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="modal-preview-card" style="aspect-ratio: 4 / 3;">
+                        <img id="modalImg" src="" alt="Location Image">
+                        <div class="modal-card-name">
+                            <span id="modalName">Location Name</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-right">
+                    <div class="info-box">
+                        <div class="info-box-title">| Origin / Universe</div>
+                        <div class="info-box-desc" id="modalOrigin">Loading...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">| Location Description</div>
+                        <div class="info-box-desc" id="modalDesc">Loading description...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">| Interesting Fact / Quote</div>
+                        <div class="line-box" id="modalFact">"Loading fact..."</div>
+                    </div>
+
+                    <div>
+                        <a id="modalWikiLink" href="#" target="_blank" class="wiki-btn">
+                            🌐 More Information / Link
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM V4.2 -->
+    <script>
+        // Splash Screen Hide Handler
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 400);
+            }
+        });
+
+        // Brightness Controller Sync
+        const slider = document.getElementById('brightness');
+        if (slider) {
+            slider.addEventListener('input', (e) => {
+                document.documentElement.style.setProperty('--bg-brightness', e.target.value + '%');
+            });
+        }
+    </script>
+    <script src="script.js"></script>
+    <script>
+        // Modal Event Handlers
+        function openModal(cardElement) {
+            // Abaikan klik jika kartu bertipe coming-soon
+            if (cardElement.classList.contains('coming-soon')) return;
+
+            if (typeof playClick === "function") {
+                playClick();
+            }
+
+            const name = cardElement.getAttribute('data-name');
+            const origin = cardElement.getAttribute('data-origin');
+            const img = cardElement.getAttribute('data-img');
+            const desc = cardElement.getAttribute('data-desc') || '-';
+            const fact = cardElement.getAttribute('data-fact') || '-';
+            const wiki = cardElement.getAttribute('data-wiki') || '#';
+
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalOrigin').innerText = origin;
+            document.getElementById('modalImg').src = img;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalFact').innerText = fact;
+            document.getElementById('modalWikiLink').href = wiki;
+
+            document.getElementById('locationModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('locationModal').classList.remove('active');
+        }
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('locationModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
